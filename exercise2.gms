@@ -27,12 +27,13 @@ Binary Variable
 Equations
     targetFunc 'Target Function'
     uniqueConstraintT(t) 'Every technique must be done by a single scientist'
-    uniqueConstraintC(c) 'Every scientist can do only one technique (max 4 scientists)'
+    uniqueConstraintC(c) 'Every scientist must perform a single technique (max 4 scientists)'
     maxScientists 'Max number of scientists required for the study';
     
-targetFunc .. z =e= sum((t,c), t(t,c)*x(t,c));
+targetFunc .. z =e= sum((t,c), scores(t,c)*x(t,c));
 uniqueConstraintT(t) .. sum((c), x(t,c)) =e= 1;
-uniqueConstraintC(c) .. sum((t), x(t,c)) =e= 1;
+uniqueConstraintC(c) .. sum((t), x(t,c)) =l=1;
+maxScientists .. sum((t,c), x(t,c)) =e= 4;
 
 Model Exercise2 /all/;
 option MIP=CPLEX;

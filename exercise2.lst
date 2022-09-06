@@ -1,0 +1,288 @@
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/06/22 09:57:26 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+      Laboratorio 2 - MOS
+      Ejercicio 2
+       
+      Realizado por:
+      Juan Andrés Romero C - 202013449
+      Juan Sebastián Alegría - 202011282
+   9   
+  10  Sets t 'ML Techniques' /S, NS, DL, RL/
+  11       c 'Scientists' /c1, c2, c3, c4, c5, c6/;
+  12   
+  13  Table scores(t,c)
+  14      c1 c2 c3 c4 c5 c6
+  15  S   85 88 87 82 91 86
+  16  NS  78 77 77 76 79 78
+  17  DL  82 82 82 80 86 81
+  18  RL  84 84 88 83 84 85;
+  19   
+  20  Variables
+  21      x(t,c) 'Scientist/Technique selected'
+  22      z 'Target function';
+  23   
+  24  Binary Variable
+  25      x;
+  26   
+  27  Equations
+  28      targetFunc 'Target Function'
+  29      uniqueConstraintT(t) 'Every technique must be done by a single scientist'
+  30      uniqueConstraintC(c) 'Every scientist must perform a single technique (max 4 scientists)'
+  31      maxScientists 'Max number of scientists required for the study';
+  32   
+  33  targetFunc .. z =e= sum((t,c), scores(t,c)*x(t,c));
+  34  uniqueConstraintT(t) .. sum((c), x(t,c)) =e= 1;
+  35  uniqueConstraintC(c) .. sum((t), x(t,c)) =l=1;
+  36  maxScientists .. sum((t,c), x(t,c)) =e= 4;
+  37   
+  38  Model Exercise2 /all/;
+  39  option MIP=CPLEX;
+  40  Solve Exercise2 using mip maximizing z;
+  41  Display x.l;
+  42  Display z.l;
+
+
+COMPILATION TIME     =        0.000 SECONDS      3 MB  40.1.0 93c2a77b WEX-WEI
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/06/22 09:57:26 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Equation Listing    SOLVE Exercise2 Using MIP From line 40
+
+
+---- targetFunc  =E=  Target Function
+
+targetFunc..  - 85*x(S,c1) - 88*x(S,c2) - 87*x(S,c3) - 82*x(S,c4) - 91*x(S,c5) - 86*x(S,c6) - 78*x(NS,c1) - 77*x(NS,c2) - 77*x(NS,c3) - 76*x(NS,c4) - 79*x(NS,c5) - 78*x(NS,c6) - 82*x(DL,c1) - 82*x(DL,c2) - 82*x(DL,c3) - 80*x(DL,c4) - 86*x(DL,c5) - 81*x(DL,c6) - 84*x(RL,c1) - 84*x(RL,c2) - 88*x(RL,c3) - 83*x(RL,c4) - 84*x(RL,c5) - 85*x(RL,c6) + z =E= 0 ; (LHS = 0)
+     
+
+---- uniqueConstraintT  =E=  Every technique must be done by a single scientist
+
+uniqueConstraintT(S)..  x(S,c1) + x(S,c2) + x(S,c3) + x(S,c4) + x(S,c5) + x(S,c6) =E= 1 ; (LHS = 0, INFES = 1 ****)
+     
+uniqueConstraintT(NS)..  x(NS,c1) + x(NS,c2) + x(NS,c3) + x(NS,c4) + x(NS,c5) + x(NS,c6) =E= 1 ; (LHS = 0, INFES = 1 ****)
+     
+uniqueConstraintT(DL)..  x(DL,c1) + x(DL,c2) + x(DL,c3) + x(DL,c4) + x(DL,c5) + x(DL,c6) =E= 1 ; (LHS = 0, INFES = 1 ****)
+     
+REMAINING ENTRY SKIPPED
+
+
+---- uniqueConstraintC  =L=  Every scientist must perform a single technique (max 4 scientists)
+
+uniqueConstraintC(c1)..  x(S,c1) + x(NS,c1) + x(DL,c1) + x(RL,c1) =L= 1 ; (LHS = 0)
+     
+uniqueConstraintC(c2)..  x(S,c2) + x(NS,c2) + x(DL,c2) + x(RL,c2) =L= 1 ; (LHS = 0)
+     
+uniqueConstraintC(c3)..  x(S,c3) + x(NS,c3) + x(DL,c3) + x(RL,c3) =L= 1 ; (LHS = 0)
+     
+REMAINING 3 ENTRIES SKIPPED
+
+
+---- maxScientists  =E=  Max number of scientists required for the study
+
+maxScientists..  x(S,c1) + x(S,c2) + x(S,c3) + x(S,c4) + x(S,c5) + x(S,c6) + x(NS,c1) + x(NS,c2) + x(NS,c3) + x(NS,c4) + x(NS,c5) + x(NS,c6) + x(DL,c1) + x(DL,c2) + x(DL,c3) + x(DL,c4) + x(DL,c5) + x(DL,c6) + x(RL,c1) + x(RL,c2) + x(RL,c3) + x(RL,c4) + x(RL,c5) + x(RL,c6) =E= 4 ; (LHS = 0, INFES = 4 ****)
+     
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/06/22 09:57:26 Page 3
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Column Listing      SOLVE Exercise2 Using MIP From line 40
+
+
+---- x  Scientist/Technique selected
+
+x(S,c1)
+                (.LO, .L, .UP, .M = 0, 0, 1, 0)
+      -85       targetFunc
+        1       uniqueConstraintT(S)
+        1       uniqueConstraintC(c1)
+        1       maxScientists
+
+x(S,c2)
+                (.LO, .L, .UP, .M = 0, 0, 1, 0)
+      -88       targetFunc
+        1       uniqueConstraintT(S)
+        1       uniqueConstraintC(c2)
+        1       maxScientists
+
+x(S,c3)
+                (.LO, .L, .UP, .M = 0, 0, 1, 0)
+      -87       targetFunc
+        1       uniqueConstraintT(S)
+        1       uniqueConstraintC(c3)
+        1       maxScientists
+
+REMAINING 21 ENTRIES SKIPPED
+
+---- z  Target function
+
+z
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+        1       targetFunc
+
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/06/22 09:57:26 Page 4
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Range Statistics    SOLVE Exercise2 Using MIP From line 40
+
+
+RANGE STATISTICS (ABSOLUTE NON-ZERO FINITE VALUES)
+
+RHS       [min, max] : [ 1.000E+00, 4.000E+00] - Zero values observed as well
+Bound     [min, max] : [ 1.000E+00, 1.000E+00] - Zero values observed as well
+Matrix    [min, max] : [ 1.000E+00, 9.100E+01]
+
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/06/22 09:57:26 Page 5
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE Exercise2 Using MIP From line 40
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS           12
+BLOCKS OF VARIABLES           2     SINGLE VARIABLES           25
+NON ZERO ELEMENTS            97     DISCRETE VARIABLES         24
+
+
+GENERATION TIME      =        0.125 SECONDS      4 MB  40.1.0 93c2a77b WEX-WEI
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/06/22 09:57:26 Page 6
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE Exercise2 Using MIP From line 40
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   Exercise2           OBJECTIVE  z
+     TYPE    MIP                 DIRECTION  MAXIMIZE
+     SOLVER  CPLEX               FROM LINE  40
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE              340.0000
+
+ RESOURCE USAGE, LIMIT          0.078 10000000000.000
+ ITERATION COUNT, LIMIT         2    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 22.1.0.0 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- MIP status (101): integer optimal solution.
+--- Cplex Time: 0.02sec (det. 0.20 ticks)
+
+--- Fixing integer variables and solving final LP...
+
+
+--- Fixed MIP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Proven optimal solution
+MIP Solution:          340.000000    (2 iterations, 0 nodes)
+Final Solve:           340.000000    (0 iterations)
+
+Best possible:         340.000000
+Absolute gap:            0.000000
+Relative gap:            0.000000
+
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- EQU targetFunc          .              .              .             1.0000      
+
+  targetFunc  Target Function
+
+---- EQU uniqueConstraintT  Every technique must be done by a single scientist
+
+          LOWER          LEVEL          UPPER         MARGINAL
+
+S          1.0000         1.0000         1.0000          .          
+NS         1.0000         1.0000         1.0000          .          
+DL         1.0000         1.0000         1.0000          .          
+RL         1.0000         1.0000         1.0000          .          
+
+---- EQU uniqueConstraintC  Every scientist must perform a single technique (max 4 scientists)
+
+          LOWER          LEVEL          UPPER         MARGINAL
+
+c1        -INF            1.0000         1.0000          .          
+c2        -INF            1.0000         1.0000          .          
+c3        -INF            1.0000         1.0000          .          
+c4        -INF             .             1.0000          .          
+c5        -INF            1.0000         1.0000          .          
+c6        -INF             .             1.0000          .          
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- EQU maxScient~         4.0000         4.0000         4.0000          .          
+
+  maxScientists  Max number of scientists required for the study
+
+---- VAR x  Scientist/Technique selected
+
+             LOWER          LEVEL          UPPER         MARGINAL
+
+S .c1          .              .             1.0000        85.0000      
+S .c2          .             1.0000         1.0000        88.0000      
+S .c3          .              .             1.0000        87.0000      
+S .c4          .              .             1.0000        82.0000      
+S .c5          .              .             1.0000        91.0000      
+S .c6          .              .             1.0000        86.0000      
+NS.c1          .             1.0000         1.0000        78.0000      
+NS.c2          .              .             1.0000        77.0000      
+NS.c3          .              .             1.0000        77.0000      
+NS.c4          .              .             1.0000        76.0000      
+NS.c5          .              .             1.0000        79.0000      
+NS.c6          .              .             1.0000        78.0000      
+DL.c1          .              .             1.0000        82.0000      
+DL.c2          .              .             1.0000        82.0000      
+DL.c3          .              .             1.0000        82.0000      
+DL.c4          .              .             1.0000        80.0000      
+DL.c5          .             1.0000         1.0000        86.0000      
+DL.c6          .              .             1.0000        81.0000      
+RL.c1          .              .             1.0000        84.0000      
+RL.c2          .              .             1.0000        84.0000      
+RL.c3          .             1.0000         1.0000        88.0000      
+RL.c4          .              .             1.0000        83.0000      
+RL.c5          .              .             1.0000        84.0000      
+RL.c6          .              .             1.0000        85.0000      
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- VAR z                 -INF          340.0000        +INF             .          
+
+  z  Target function
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/06/22 09:57:26 Page 7
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+E x e c u t i o n
+
+
+----     41 VARIABLE x.L  Scientist/Technique selected
+
+            c1          c2          c3          c5
+
+S                    1.000
+NS       1.000
+DL                                           1.000
+RL                               1.000
+
+
+----     42 VARIABLE z.L                   =      340.000  Target function
+
+
+EXECUTION TIME       =        0.500 SECONDS      4 MB  40.1.0 93c2a77b WEX-WEI
+
+
+USER: GAMS Demo license for Juan Romero              G220823|0002CO-GEN
+      University of Los Andes, Colombia                        DL072145
+
+
+**** FILE SUMMARY
+
+Input      C:\Users\ElRey\Documents\Scripts\GAMS\laboratory-02\exercise2.gms
+Output     C:\Users\ElRey\Documents\Scripts\GAMS\laboratory-02\exercise2.lst
