@@ -1,4 +1,4 @@
-GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/06/22 07:21:35 Page 1
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/06/22 07:47:31 Page 1
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 C o m p i l a t i o n
 
@@ -49,16 +49,17 @@ C o m p i l a t i o n
   46  satisfiedCPUDemand(j,p) .. sum((i), x(i,j,p)) =e= dProcess(j,p);
   47   
   48   
-  49  Model Exercise3 /all/;
+  49  Model Exercise1 /all/;
   50  option MIP=CPLEX;
-  51  Solve Exercise3 using LP minimizing z;
+  51  Solve Exercise1 using LP minimizing z;
   52  Display x.l;
+  53   
 
 
 COMPILATION TIME     =        0.000 SECONDS      3 MB  40.1.0 93c2a77b WEX-WEI
-GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/06/22 07:21:35 Page 2
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/06/22 07:47:31 Page 2
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Equation Listing    SOLVE Exercise3 Using LP From line 51
+Equation Listing    SOLVE Exercise1 Using LP From line 51
 
 
 ---- targetFunc  =E=  Target Function
@@ -87,9 +88,9 @@ satisfiedCPUDemand(j2,pk)..  x(i1,j2,pk) + x(i2,j2,pk) + x(i3,j2,pk) =E= 90 ; (L
      
 REMAINING ENTRY SKIPPED
 
-GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/06/22 07:21:35 Page 3
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/06/22 07:47:31 Page 3
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Column Listing      SOLVE Exercise3 Using LP From line 51
+Column Listing      SOLVE Exercise1 Using LP From line 51
 
 
 ---- x  Amount of processes sent per path and type
@@ -120,9 +121,9 @@ z
                 (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
         1       targetFunc
 
-GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/06/22 07:21:35 Page 4
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/06/22 07:47:31 Page 4
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Range Statistics    SOLVE Exercise3 Using LP From line 51
+Range Statistics    SOLVE Exercise1 Using LP From line 51
 
 
 RANGE STATISTICS (ABSOLUTE NON-ZERO FINITE VALUES)
@@ -131,9 +132,9 @@ RHS       [min, max] : [ 5.000E+01, 1.200E+02] - Zero values observed as well
 Bound     [min, max] : [        NA,        NA] - Zero values observed as well
 Matrix    [min, max] : [ 1.000E+00, 6.000E+02]
 
-GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/06/22 07:21:35 Page 5
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/06/22 07:47:31 Page 5
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Model Statistics    SOLVE Exercise3 Using LP From line 51
+Model Statistics    SOLVE Exercise1 Using LP From line 51
 
 
 MODEL STATISTICS
@@ -144,14 +145,14 @@ NON ZERO ELEMENTS            37
 
 
 GENERATION TIME      =        0.015 SECONDS      4 MB  40.1.0 93c2a77b WEX-WEI
-GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/06/22 07:21:35 Page 6
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/06/22 07:47:31 Page 6
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Solution Report     SOLVE Exercise3 Using LP From line 51
+Solution Report     SOLVE Exercise1 Using LP From line 51
 
 
                S O L V E      S U M M A R Y
 
-     MODEL   Exercise3           OBJECTIVE  z
+     MODEL   Exercise1           OBJECTIVE  z
      TYPE    LP                  DIRECTION  MINIMIZE
      SOLVER  CPLEX               FROM LINE  51
 
@@ -230,7 +231,7 @@ i3.j2.pu          .            50.0000        +INF             .
 **** REPORT SUMMARY :        0     NONOPT
                              0 INFEASIBLE
                              0  UNBOUNDED
-GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/06/22 07:21:35 Page 7
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/06/22 07:47:31 Page 7
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 E x e c u t i o n
 
@@ -247,7 +248,7 @@ i3.j2      50.000      50.000
 
 
 
-EXECUTION TIME       =        0.078 SECONDS      4 MB  40.1.0 93c2a77b WEX-WEI
+EXECUTION TIME       =        0.062 SECONDS      4 MB  40.1.0 93c2a77b WEX-WEI
 
 
 USER: GAMS Demo license for Juan Romero              G220823|0002CO-GEN

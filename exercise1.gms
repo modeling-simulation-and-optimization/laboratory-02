@@ -46,7 +46,8 @@ maxProcessesSent(i,p) .. sum((j), x(i,j,p)) =l= oProcess(i,p);
 satisfiedCPUDemand(j,p) .. sum((i), x(i,j,p)) =e= dProcess(j,p);
 
 
-Model Exercise3 /all/;
+Model Exercise1 /all/;
 option MIP=CPLEX;
-Solve Exercise3 using LP minimizing z;
+Solve Exercise1 using LP minimizing z;
 Display x.l;
+
