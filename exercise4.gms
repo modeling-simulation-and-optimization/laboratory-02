@@ -35,7 +35,8 @@ loop((i,j),
     );
 );
 
-
+Scalar sourceNode /4/;
+Scalar destinationNode /6/;
 
 Variables
   x(i,j)      Indicates if the link i-j is selected or not.
@@ -45,17 +46,17 @@ Binary Variable x;
 
 Equations
 targetFunc               target function
-sourceNode(i)            source node
-destinationNode(j)       destination node
-intermediateNode         intermediate node;
+sourceNodeRestriction(i)            source node
+destinationNodeRestriction(j)       destination node
+intermediateNodeRestriction         intermediate node;
 
-targetFunc                                         ..  z =e= sum((i,j), graph(i,j) * x(i,j));
+targetFunc                                                                           ..  z =e= sum((i,j), graph(i,j) * x(i,j));
 
-sourceNode(i)$(ord(i) = 4)                         ..  sum((j), x(i,j)) =e= 1;
+sourceNodeRestriction(i)$(ord(i) = sourceNode)                                       ..  sum((j), x(i,j)) =e= 1;
 
-destinationNode(j)$(ord(j) = 6)                    ..  sum((i), x(i,j)) =e= 1;
+destinationNodeRestriction(j)$(ord(j) = destinationNode)                             ..  sum((i), x(i,j)) =e= 1;
 
-intermediateNode(i)$(ord(i) <> 4 and ord(i) ne 6)  ..  sum((j), x(i,j)) - sum((j), x(j,i)) =e= 0;
+intermediateNodeRestriction(i)$(ord(i) <> sourceNode and ord(i) ne destinationNode)  ..  sum((j), x(i,j)) - sum((j), x(j,i)) =e= 0;
 
 Model Exercise4 /all/ ;
 option mip=cplex
