@@ -8,9 +8,9 @@ Juan Sebastián Alegría - 202011282
 $offText
 
 Sets i 'Zones' /i1*i12/
-alias(j,i);
+     alias(j,i);
 
-Parameter edges(i,j) graph edges;
+Parameter edges(i,j) 'Graph edges';
 
 * Connections from node 1
 edges('i1','i2') = 1;
@@ -50,37 +50,28 @@ edges('i10','i11') = 1;
 
 * Since it's an undirected graph there are bidirectional connections
 loop((i,j),
-    if ((edges(i,j) = 1),
-        edges(j,i) = 1
+    if (edges(i,j) = 1,
+       edges(j,i) = 1
     );
 );
 
-* We also need to consider that the zone that the antenna is being installed at
-* also has coverage
+* Indicate the coverage of the zone where the antenna is installed.
 loop((i),
     edges(i,i) = 1;
 );
 
+Variables x(i) 'Node selected'
+          z    'Target function';
 
-Variables
-    x(i) 'Node selected'
-    z 'Target function';
-    
-Binary Variable
-    x;
+Binary Variable x;
 
-Equations
-    targetFunc 'Target Function'
-    coverage(i) 'All nodes must be covered';
-    
-targetFunc .. z =e= sum(i, x(i));
-coverage(i) .. sum((j), x(j)*edges(i,j)) =g=1;
+Equations targetFunc  'Target Function'
+          coverage(i) 'All nodes must be covered';
 
-
+targetFunc..  z =e= sum(i, x(i));
+coverage(i).. sum((j), x(j)*edges(i,j)) =g= 1;
 
 Model Exercise3 /all/ ;
 option mip=cplex
 Solve Exercise3 using mip minimizing z;
 Display x.l;
-
-

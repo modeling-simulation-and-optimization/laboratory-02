@@ -1,4 +1,4 @@
-GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/14/22 11:38:42 Page 1
+GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/14/22 14:24:02 Page 1
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 C o m p i l a t i o n
 
@@ -10,70 +10,65 @@ C o m p i l a t i o n
       Juan Andrés Romero C - 202013449
       Juan Sebastián Alegría - 202011282
    9   
-  10  Sets i 'Graph Nodes' /i1*i7/
-  11       coords 'Coordinate Dimensions' /coordX, coordY/
+  10  Sets i      'Graph nodes'           /i1*i7/
+  11       coords 'Coordinate dimensions' /coordX, coordY/
   12       alias(j,i);
   13   
-  14  Table positions(i, coords)
-  15      coordX  coordY
-  16  i1  20      6
-  17  i2  22      1
-  18  i3  9       2
-  19  i4  3       25
-  20  i5  21      10
-  21  i6  29      2
-  22  i7  14      12;
-  23   
-  24  Parameter distance(i,j) 'Distances between nodes';
-  25   
-  26  Parameter graph(i,j) 'Resulting graph between the node set';
+  14  Table positions(i,coords)
+  15   
+  16      coordX  coordY
+  17  i1      20      6
+  18  i2      22      1
+  19  i3       9      2
+  20  i4       3     25
+  21  i5      21     10
+  22  i6      29      2
+  23  i7      14     12;
+  24   
+  25  Parameters distance(i,j) 'Distances between nodes'
+  26             graph(i,j)    'Resulting graph of connections between the node set';
   27   
-  28   
-  29  loop((i,j),
-  30      distance(i,j) = sqrt(sqr(positions(i, 'coordX') - positions(j, 'coordX')) + sqr(positions(i, 'coordY') - positions(j, 'coordY')));
-  31      if ((distance(i,j) <=20 and distance(i,j) >0),
-  32          graph(i,j) = distance(i,j);
-  33      else
-  34          graph(i,j) = 999;
-  35      );
-  36  );
-  37   
-  38  Scalar sourceNode /4/;
-  39  Scalar destinationNode /6/;
-  40   
-  41  Variables
-  42    x(i,j)      Indicates if the link i-j is selected or not.
-  43    z           Objective function  ;
+  28  loop((i,j),
+  29      distance(i,j) = sqrt(sqr(positions(i,'coordX')-positions(j,'coordX')) + sqr(positions(i,'coordY')-positions(j,'coordY')));
+  30      if ((distance(i,j) <= 20 and distance(i,j) > 0),
+  31          graph(i,j) = distance(i,j);
+  32      else
+  33          graph(i,j) = 999;
+  34      );
+  35  );
+  36   
+  37  Scalar sourceNode      /4/;
+  38  Scalar destinationNode /6/;
+  39   
+  40  Variables x(i,j) 'Indicates if the link i-j is selected or not'
+  41            z      'Objective function';
+  42   
+  43  Binary Variable x;
   44   
-  45  Binary Variable x;
-  46   
-  47  Equations
-  48  targetFunc               target function
-  49  sourceNodeRestriction(i)            source node
-  50  destinationNodeRestriction(j)       destination node
-  51  intermediateNodeRestriction         intermediate node;
-  52   
-  53  targetFunc                                                                           ..  z =e= sum((i,j), graph(i,j) * x(i,j));
-  54   
-  55  sourceNodeRestriction(i)$(ord(i) = sourceNode)                                       ..  sum((j), x(i,j)) =e= 1;
-  56   
-  57  destinationNodeRestriction(j)$(ord(j) = destinationNode)                             ..  sum((i), x(i,j)) =e= 1;
-  58   
-  59  intermediateNodeRestriction(i)$(ord(i) <> sourceNode and ord(i) ne destinationNode)  ..  sum((j), x(i,j)) - sum((j), x(j,i)) =e= 0;
-  60   
-  61  Model Exercise4 /all/ ;
-  62  option mip=cplex
-  63  Solve Exercise4 using mip minimizing z;
-  64   
-  65  Display graph;
-  66  Display x.l;
-  67  Display z.l;
+  45  Equations
+  46  targetFunc                    'target function'
+  47  sourceNodeRestriction(i)      'source node'
+  48  destinationNodeRestriction(j) 'destination node'
+  49  intermediateNodeRestriction   'intermediate node';
+  50   
+  51  targetFunc..                                                                           z =e= sum((i,j), graph(i,j)*x(i,j));
+  52  sourceNodeRestriction(i)$(ord(i) = sourceNode)..                                       sum((j), x(i,j)) =e= 1;
+  53  destinationNodeRestriction(j)$(ord(j) = destinationNode)..                             sum((i), x(i,j)) =e= 1;
+  54  intermediateNodeRestriction(i)$(ord(i) <> sourceNode and ord(i) <> destinationNode)..  sum((j), x(i,j)) - sum((j), x(j,i)) =e= 0;
+  55   
+  56  Model Exercise4 /all/ ;
+  57  option mip=cplex
+  58  Solve Exercise4 using mip minimizing z;
+  59   
+  60  Display graph;
+  61  Display x.l;
+  62  Display z.l;
 
 
-COMPILATION TIME     =        0.000 SECONDS      3 MB  40.1.0 93c2a77b WEX-WEI
-GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/14/22 11:38:42 Page 2
+COMPILATION TIME     =        0.005 SECONDS      3 MB  40.1.0 93c2a77b DEX-DEG
+GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/14/22 14:24:02 Page 2
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Equation Listing    SOLVE Exercise4 Using MIP From line 63
+Equation Listing    SOLVE Exercise4 Using MIP From line 58
 
 
 ---- targetFunc  =E=  target function
@@ -101,12 +96,12 @@ intermediateNodeRestriction(i3)..  - x(i1,i3) - x(i2,i3) + x(i3,i1) + x(i3,i2) +
      
 REMAINING 2 ENTRIES SKIPPED
 
-GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/14/22 11:38:42 Page 3
+GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/14/22 14:24:02 Page 3
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Column Listing      SOLVE Exercise4 Using MIP From line 63
+Column Listing      SOLVE Exercise4 Using MIP From line 58
 
 
----- x  Indicates if the link i-j is selected or not.
+---- x  Indicates if the link i-j is selected or not
 
 x(i1,i1)
                 (.LO, .L, .UP, .M = 0, 0, 1, 0)
@@ -132,9 +127,9 @@ z
                 (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
         1       targetFunc
 
-GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/14/22 11:38:42 Page 4
+GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/14/22 14:24:02 Page 4
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Range Statistics    SOLVE Exercise4 Using MIP From line 63
+Range Statistics    SOLVE Exercise4 Using MIP From line 58
 
 
 RANGE STATISTICS (ABSOLUTE NON-ZERO FINITE VALUES)
@@ -143,9 +138,9 @@ RHS       [min, max] : [ 1.000E+00, 1.000E+00] - Zero values observed as well
 Bound     [min, max] : [ 1.000E+00, 1.000E+00] - Zero values observed as well
 Matrix    [min, max] : [ 1.000E+00, 9.990E+02]
 
-GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/14/22 11:38:42 Page 5
+GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/14/22 14:24:02 Page 5
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Model Statistics    SOLVE Exercise4 Using MIP From line 63
+Model Statistics    SOLVE Exercise4 Using MIP From line 58
 
 
 MODEL STATISTICS
@@ -155,25 +150,25 @@ BLOCKS OF VARIABLES           2     SINGLE VARIABLES           50
 NON ZERO ELEMENTS           124     DISCRETE VARIABLES         49
 
 
-GENERATION TIME      =        0.000 SECONDS      4 MB  40.1.0 93c2a77b WEX-WEI
-GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/14/22 11:38:42 Page 6
+GENERATION TIME      =        0.012 SECONDS      4 MB  40.1.0 93c2a77b DEX-DEG
+GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/14/22 14:24:02 Page 6
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Solution Report     SOLVE Exercise4 Using MIP From line 63
+Solution Report     SOLVE Exercise4 Using MIP From line 58
 
 
                S O L V E      S U M M A R Y
 
      MODEL   Exercise4           OBJECTIVE  z
      TYPE    MIP                 DIRECTION  MINIMIZE
-     SOLVER  CPLEX               FROM LINE  63
+     SOLVER  CPLEX               FROM LINE  58
 
 **** SOLVER STATUS     1 Normal Completion
 **** MODEL STATUS      1 Optimal
 **** OBJECTIVE VALUE               35.0571
 
- RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ RESOURCE USAGE, LIMIT          0.049 10000000000.000
  ITERATION COUNT, LIMIT         5    2147483647
---- *** This solver runs with a demo license. No commercial use.
+--- *** This solver runs with a community license. No commercial use.
 --- GMO setup time: 0.00s
 --- GMO memory 0.50 Mb (peak 0.50 Mb)
 --- Dictionary memory 0.00 Mb
@@ -182,7 +177,7 @@ Solution Report     SOLVE Exercise4 Using MIP From line 63
 
 
 --- MIP status (101): integer optimal solution.
---- Cplex Time: 0.00sec (det. 0.33 ticks)
+--- Cplex Time: 0.02sec (det. 0.33 ticks)
 
 --- Fixing integer variables and solving final LP...
 
@@ -228,7 +223,7 @@ i3          .              .              .              .
 i5          .              .              .              .          
 i7          .              .              .              .          
 
----- VAR x  Indicates if the link i-j is selected or not.
+---- VAR x  Indicates if the link i-j is selected or not
 
              LOWER          LEVEL          UPPER         MARGINAL
 
@@ -292,12 +287,12 @@ i7.i7          .              .             1.0000       999.0000
 **** REPORT SUMMARY :        0     NONOPT
                              0 INFEASIBLE
                              0  UNBOUNDED
-GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/14/22 11:38:42 Page 7
+GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/14/22 14:24:02 Page 7
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 E x e c u t i o n
 
 
-----     65 PARAMETER graph  Resulting graph between the node set
+----     60 PARAMETER graph  Resulting graph of connections between the node set
 
             i1          i2          i3          i4          i5          i6          i7
 
@@ -310,7 +305,7 @@ i6       9.849       7.071      20.000     999.000      11.314     999.000      
 i7       8.485      13.601      11.180      17.029       7.280      18.028     999.000
 
 
-----     66 VARIABLE x.L  Indicates if the link i-j is selected or not.
+----     61 VARIABLE x.L  Indicates if the link i-j is selected or not
 
             i6          i7
 
@@ -318,17 +313,18 @@ i4                   1.000
 i7       1.000
 
 
-----     67 VARIABLE z.L                   =       35.057  Objective function
+----     62 VARIABLE z.L                   =       35.057  Objective function
 
 
-EXECUTION TIME       =        0.094 SECONDS      4 MB  40.1.0 93c2a77b WEX-WEI
+EXECUTION TIME       =        0.092 SECONDS      4 MB  40.1.0 93c2a77b DEX-DEG
 
 
-USER: GAMS Demo license for Juan Romero              G220823|0002CO-GEN
-      University of Los Andes, Colombia                        DL072145
+USER: GAMS Community License for Juan Alegria        G220811|0002AO-GEN
+      Universidad de los Andes,                                  CL3634
+      License for teaching and research at degree granting institutions
 
 
 **** FILE SUMMARY
 
-Input      C:\Users\ElRey\Documents\Scripts\GAMS\laboratory-02\exercise4.gms
-Output     C:\Users\ElRey\Documents\Scripts\GAMS\laboratory-02\exercise4.lst
+Input      /Users/zejiran/hack/uniandes/MSO/laboratory-02/exercise4.gms
+Output     /Users/zejiran/hack/uniandes/MSO/laboratory-02/exercise4.lst

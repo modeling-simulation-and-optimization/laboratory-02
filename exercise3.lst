@@ -1,4 +1,4 @@
-GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/14/22 09:19:34 Page 1
+GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/14/22 14:13:09 Page 1
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 C o m p i l a t i o n
 
@@ -11,9 +11,9 @@ C o m p i l a t i o n
       Juan Sebastián Alegría - 202011282
    9   
   10  Sets i 'Zones' /i1*i12/
-  11  alias(j,i);
+  11       alias(j,i);
   12   
-  13  Parameter edges(i,j) grafo;
+  13  Parameter edges(i,j) 'Graph edges';
   14   
   15  * Connections from node 1
   16  edges('i1','i2') = 1;
@@ -53,46 +53,37 @@ C o m p i l a t i o n
   50   
   51  * Since it's an undirected graph there are bidirectional connections
   52  loop((i,j),
-  53      if ((edges(i,j) = 1),
-  54          edges(j,i) = 1
+  53      if (edges(i,j) = 1,
+  54         edges(j,i) = 1
   55      );
   56  );
   57   
-  58  * We also need to consider that the zone that the antenna is being installed at,
-  59  * also has coverage
-  60  loop((i),
-  61      edges(i,i) = 1;
-  62  );
-  63   
-  64   
-  65  Variables
-  66      x(i) 'Node selected'
-  67      z 'Target function';
-  68   
-  69  Binary Variable
-  70      x;
-  71   
-  72  Equations
-  73      targetFunc 'Target Function'
-  74      coverage(i) 'All nodes must be covered';
-  75   
-  76  targetFunc .. z =e= sum(i, x(i));
-  77  coverage(i) .. sum((j), x(j)*edges(i,j)) =g=1;
-  78   
-  79   
-  80   
-  81  Model Exercise3 /all/ ;
-  82  option mip=cplex
-  83  Solve Exercise3 using mip minimizing z;
-  84  Display x.l;
-  85   
-  86   
+  58  * Indicate the coverage of the zone where the antenna is installed.
+  59  loop((i),
+  60      edges(i,i) = 1;
+  61  );
+  62   
+  63  Variables x(i) 'Node selected'
+  64            z    'Target function';
+  65   
+  66  Binary Variable x;
+  67   
+  68  Equations targetFunc  'Target Function'
+  69            coverage(i) 'All nodes must be covered';
+  70   
+  71  targetFunc..  z =e= sum(i, x(i));
+  72  coverage(i).. sum((j), x(j)*edges(i,j)) =g= 1;
+  73   
+  74  Model Exercise3 /all/ ;
+  75  option mip=cplex
+  76  Solve Exercise3 using mip minimizing z;
+  77  Display x.l;
 
 
-COMPILATION TIME     =        0.000 SECONDS      3 MB  40.1.0 93c2a77b WEX-WEI
-GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/14/22 09:19:34 Page 2
+COMPILATION TIME     =        0.002 SECONDS      3 MB  40.1.0 93c2a77b DEX-DEG
+GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/14/22 14:13:09 Page 2
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Equation Listing    SOLVE Exercise3 Using MIP From line 83
+Equation Listing    SOLVE Exercise3 Using MIP From line 76
 
 
 ---- targetFunc  =E=  Target Function
@@ -110,9 +101,9 @@ coverage(i3)..  x(i1) + x(i3) + x(i4) + x(i5) + x(i6) + x(i7) + x(i8) =G= 1 ; (L
      
 REMAINING 9 ENTRIES SKIPPED
 
-GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/14/22 09:19:34 Page 3
+GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/14/22 14:13:09 Page 3
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Column Listing      SOLVE Exercise3 Using MIP From line 83
+Column Listing      SOLVE Exercise3 Using MIP From line 76
 
 
 ---- x  Node selected
@@ -151,9 +142,9 @@ z
                 (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
         1       targetFunc
 
-GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/14/22 09:19:34 Page 4
+GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/14/22 14:13:09 Page 4
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Range Statistics    SOLVE Exercise3 Using MIP From line 83
+Range Statistics    SOLVE Exercise3 Using MIP From line 76
 
 
 RANGE STATISTICS (ABSOLUTE NON-ZERO FINITE VALUES)
@@ -162,9 +153,9 @@ RHS       [min, max] : [ 1.000E+00, 1.000E+00] - Zero values observed as well
 Bound     [min, max] : [ 1.000E+00, 1.000E+00] - Zero values observed as well
 Matrix    [min, max] : [ 1.000E+00, 1.000E+00]
 
-GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/14/22 09:19:34 Page 5
+GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/14/22 14:13:09 Page 5
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Model Statistics    SOLVE Exercise3 Using MIP From line 83
+Model Statistics    SOLVE Exercise3 Using MIP From line 76
 
 
 MODEL STATISTICS
@@ -174,25 +165,25 @@ BLOCKS OF VARIABLES           2     SINGLE VARIABLES           13
 NON ZERO ELEMENTS            75     DISCRETE VARIABLES         12
 
 
-GENERATION TIME      =        0.016 SECONDS      4 MB  40.1.0 93c2a77b WEX-WEI
-GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/14/22 09:19:34 Page 6
+GENERATION TIME      =        0.012 SECONDS      4 MB  40.1.0 93c2a77b DEX-DEG
+GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/14/22 14:13:09 Page 6
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Solution Report     SOLVE Exercise3 Using MIP From line 83
+Solution Report     SOLVE Exercise3 Using MIP From line 76
 
 
                S O L V E      S U M M A R Y
 
      MODEL   Exercise3           OBJECTIVE  z
      TYPE    MIP                 DIRECTION  MINIMIZE
-     SOLVER  CPLEX               FROM LINE  83
+     SOLVER  CPLEX               FROM LINE  76
 
 **** SOLVER STATUS     1 Normal Completion
 **** MODEL STATUS      1 Optimal
 **** OBJECTIVE VALUE                2.0000
 
- RESOURCE USAGE, LIMIT          0.016 10000000000.000
+ RESOURCE USAGE, LIMIT          0.038 10000000000.000
  ITERATION COUNT, LIMIT         0    2147483647
---- *** This solver runs with a demo license. No commercial use.
+--- *** This solver runs with a community license. No commercial use.
 --- GMO setup time: 0.00s
 --- GMO memory 0.50 Mb (peak 0.50 Mb)
 --- Dictionary memory 0.00 Mb
@@ -201,7 +192,7 @@ Solution Report     SOLVE Exercise3 Using MIP From line 83
 
 
 --- MIP status (101): integer optimal solution.
---- Cplex Time: 0.00sec (det. 0.03 ticks)
+--- Cplex Time: 0.01sec (det. 0.03 ticks)
 
 --- Fixing integer variables and solving final LP...
 
@@ -269,25 +260,26 @@ i12          .              .             1.0000         1.0000
 **** REPORT SUMMARY :        0     NONOPT
                              0 INFEASIBLE
                              0  UNBOUNDED
-GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/14/22 09:19:34 Page 7
+GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/14/22 14:13:09 Page 7
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 E x e c u t i o n
 
 
-----     84 VARIABLE x.L  Node selected
+----     77 VARIABLE x.L  Node selected
 
 i5 1.000,    i8 1.000
 
 
 
-EXECUTION TIME       =        0.047 SECONDS      4 MB  40.1.0 93c2a77b WEX-WEI
+EXECUTION TIME       =        0.082 SECONDS      4 MB  40.1.0 93c2a77b DEX-DEG
 
 
-USER: GAMS Demo license for Juan Romero              G220823|0002CO-GEN
-      University of Los Andes, Colombia                        DL072145
+USER: GAMS Community License for Juan Alegria        G220811|0002AO-GEN
+      Universidad de los Andes,                                  CL3634
+      License for teaching and research at degree granting institutions
 
 
 **** FILE SUMMARY
 
-Input      C:\Users\ElRey\Documents\Scripts\GAMS\laboratory-02\exercise3.gms
-Output     C:\Users\ElRey\Documents\Scripts\GAMS\laboratory-02\exercise3.lst
+Input      /Users/zejiran/hack/uniandes/MSO/laboratory-02/exercise3.gms
+Output     /Users/zejiran/hack/uniandes/MSO/laboratory-02/exercise3.lst

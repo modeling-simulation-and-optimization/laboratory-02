@@ -1,4 +1,4 @@
-GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/06/22 07:47:31 Page 1
+GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/14/22 14:10:33 Page 1
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 C o m p i l a t i o n
 
@@ -10,56 +10,53 @@ C o m p i l a t i o n
       Juan Andrés Romero C - 202013449
       Juan Sebastián Alegría - 202011282
    9   
-  10  Sets i 'Origin CPUs'           /i1, i2, i3/
-  11       j 'Destination CPUs'      /j1, j2/
-  12       p 'Proccess Type'         /pk, pu/;
+  10  Sets i 'Origin CPUs'       /i1, i2, i3/
+  11       j 'Destination CPUs'  /j1, j2/
+  12       p 'Proccess Type'     /pk, pu/;
   13   
-  14  Table oProcess(i,p) 'Amount of processes supplied by Origin'
-  15       pk  pu
-  16   i1  60  80
-  17   i2  80  50
-  18   i3  50  50;
-  19   
-  20  Table dProcess(j,p) 'Amount of procceses needed by Destination'
-  21       pk  pu
-  22   j1  100 60
-  23   j2  90  120;
-  24   
-  25  Table cost(i, j) 'Transmission costs between CPUs'
-  26       j1  j2
-  27   i1  300 500
-  28   i2  200 300
-  29   i3  600 300;
-  30   
-  31  Variables
-  32    x(i,j,p) 'Amount of processes sent per path and type'
-  33    z        'Target Function';
-  34   
-  35  Positive Variable
-  36      x;
-  37   
+  14  Table oProcess(i,p) 'Amount of processes supplied by origin'
+  15   
+  16       pk  pu
+  17   i1  60  80
+  18   i2  80  50
+  19   i3  50  50;
+  20   
+  21  Table dProcess(j,p) 'Amount of procceses needed by destination'
+  22   
+  23        pk   pu
+  24   j1  100   60
+  25   j2   90  120;
+  26   
+  27  Table cost(i,j) 'Transmission costs between CPUs'
+  28   
+  29        j1  j2
+  30   i1  300 500
+  31   i2  200 300
+  32   i3  600 300;
+  33   
+  34  Variables x(i,j,p) 'Amount of processes sent per path and type'
+  35            z        'Target Function';
+  36   
+  37  Positive Variable x;
   38   
-  39  Equations
-  40      targetFunc 'Target Function'
-  41      maxProcessesSent(i,p) 'Maximum amount of processes sent per origin CPU'
-  42      satisfiedCPUDemand(j,p) 'Destination CPU process demand';
-  43   
-  44  targetFunc .. z =e= sum((i,j,p), cost(i,j)*x(i,j,p));
-  45  maxProcessesSent(i,p) .. sum((j), x(i,j,p)) =l= oProcess(i,p);
-  46  satisfiedCPUDemand(j,p) .. sum((i), x(i,j,p)) =e= dProcess(j,p);
-  47   
-  48   
-  49  Model Exercise1 /all/;
-  50  option MIP=CPLEX;
-  51  Solve Exercise1 using LP minimizing z;
-  52  Display x.l;
-  53   
+  39  Equations targetFunc              'Target Function'
+  40            maxProcessesSent(i,p)   'Maximum amount of processes sent per origin CPU'
+  41            satisfiedCPUDemand(j,p) 'Destination CPU process demand';
+  42   
+  43  targetFunc..              z =e= sum((i,j,p), cost(i,j)*x(i,j,p));
+  44  maxProcessesSent(i,p)..   sum((j), x(i,j,p)) =l= oProcess(i,p);
+  45  satisfiedCPUDemand(j,p).. sum((i), x(i,j,p)) =e= dProcess(j,p);
+  46   
+  47  Model Exercise1 /all/;
+  48  option MIP=CPLEX;
+  49  Solve Exercise1 using LP minimizing z;
+  50  Display x.l;
 
 
-COMPILATION TIME     =        0.000 SECONDS      3 MB  40.1.0 93c2a77b WEX-WEI
-GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/06/22 07:47:31 Page 2
+COMPILATION TIME     =        0.002 SECONDS      3 MB  40.1.0 93c2a77b DEX-DEG
+GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/14/22 14:10:33 Page 2
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Equation Listing    SOLVE Exercise1 Using LP From line 51
+Equation Listing    SOLVE Exercise1 Using LP From line 49
 
 
 ---- targetFunc  =E=  Target Function
@@ -88,9 +85,9 @@ satisfiedCPUDemand(j2,pk)..  x(i1,j2,pk) + x(i2,j2,pk) + x(i3,j2,pk) =E= 90 ; (L
      
 REMAINING ENTRY SKIPPED
 
-GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/06/22 07:47:31 Page 3
+GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/14/22 14:10:33 Page 3
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Column Listing      SOLVE Exercise1 Using LP From line 51
+Column Listing      SOLVE Exercise1 Using LP From line 49
 
 
 ---- x  Amount of processes sent per path and type
@@ -121,9 +118,9 @@ z
                 (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
         1       targetFunc
 
-GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/06/22 07:47:31 Page 4
+GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/14/22 14:10:33 Page 4
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Range Statistics    SOLVE Exercise1 Using LP From line 51
+Range Statistics    SOLVE Exercise1 Using LP From line 49
 
 
 RANGE STATISTICS (ABSOLUTE NON-ZERO FINITE VALUES)
@@ -132,9 +129,9 @@ RHS       [min, max] : [ 5.000E+01, 1.200E+02] - Zero values observed as well
 Bound     [min, max] : [        NA,        NA] - Zero values observed as well
 Matrix    [min, max] : [ 1.000E+00, 6.000E+02]
 
-GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/06/22 07:47:31 Page 5
+GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/14/22 14:10:33 Page 5
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Model Statistics    SOLVE Exercise1 Using LP From line 51
+Model Statistics    SOLVE Exercise1 Using LP From line 49
 
 
 MODEL STATISTICS
@@ -144,25 +141,25 @@ BLOCKS OF VARIABLES           2     SINGLE VARIABLES           13
 NON ZERO ELEMENTS            37
 
 
-GENERATION TIME      =        0.015 SECONDS      4 MB  40.1.0 93c2a77b WEX-WEI
-GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/06/22 07:47:31 Page 6
+GENERATION TIME      =        0.005 SECONDS      4 MB  40.1.0 93c2a77b DEX-DEG
+GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/14/22 14:10:33 Page 6
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Solution Report     SOLVE Exercise1 Using LP From line 51
+Solution Report     SOLVE Exercise1 Using LP From line 49
 
 
                S O L V E      S U M M A R Y
 
      MODEL   Exercise1           OBJECTIVE  z
      TYPE    LP                  DIRECTION  MINIMIZE
-     SOLVER  CPLEX               FROM LINE  51
+     SOLVER  CPLEX               FROM LINE  49
 
 **** SOLVER STATUS     1 Normal Completion
 **** MODEL STATUS      1 Optimal
 **** OBJECTIVE VALUE           111000.0000
 
- RESOURCE USAGE, LIMIT          0.000 10000000000.000
+ RESOURCE USAGE, LIMIT          0.012 10000000000.000
  ITERATION COUNT, LIMIT         5    2147483647
---- *** This solver runs with a demo license. No commercial use.
+--- *** This solver runs with a community license. No commercial use.
 --- GMO setup time: 0.00s
 --- GMO memory 0.50 Mb (peak 0.50 Mb)
 --- Dictionary memory 0.00 Mb
@@ -231,12 +228,12 @@ i3.j2.pu          .            50.0000        +INF             .
 **** REPORT SUMMARY :        0     NONOPT
                              0 INFEASIBLE
                              0  UNBOUNDED
-GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/06/22 07:47:31 Page 7
+GAMS 40.1.0  93c2a77b Aug 1, 2022           DEX-DEG x86 64bit/Mac OS X - 09/14/22 14:10:33 Page 7
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 E x e c u t i o n
 
 
-----     52 VARIABLE x.L  Amount of processes sent per path and type
+----     50 VARIABLE x.L  Amount of processes sent per path and type
 
                pk          pu
 
@@ -248,14 +245,15 @@ i3.j2      50.000      50.000
 
 
 
-EXECUTION TIME       =        0.062 SECONDS      4 MB  40.1.0 93c2a77b WEX-WEI
+EXECUTION TIME       =        0.040 SECONDS      4 MB  40.1.0 93c2a77b DEX-DEG
 
 
-USER: GAMS Demo license for Juan Romero              G220823|0002CO-GEN
-      University of Los Andes, Colombia                        DL072145
+USER: GAMS Community License for Juan Alegria        G220811|0002AO-GEN
+      Universidad de los Andes,                                  CL3634
+      License for teaching and research at degree granting institutions
 
 
 **** FILE SUMMARY
 
-Input      C:\Users\ElRey\Documents\Scripts\GAMS\laboratory-02\exercise1.gms
-Output     C:\Users\ElRey\Documents\Scripts\GAMS\laboratory-02\exercise1.lst
+Input      /Users/zejiran/hack/uniandes/MSO/laboratory-02/exercise1.gms
+Output     /Users/zejiran/hack/uniandes/MSO/laboratory-02/exercise1.lst
