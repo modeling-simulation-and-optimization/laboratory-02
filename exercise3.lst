@@ -1,0 +1,293 @@
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/14/22 09:19:34 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+      Laboratorio 2 - MOS
+      Ejercicio 3
+       
+      Realizado por:
+      Juan Andrés Romero C - 202013449
+      Juan Sebastián Alegría - 202011282
+   9   
+  10  Sets i 'Zones' /i1*i12/
+  11  alias(j,i);
+  12   
+  13  Parameter edges(i,j) grafo;
+  14   
+  15  * Connections from node 1
+  16  edges('i1','i2') = 1;
+  17  edges('i1','i3') = 1;
+  18  edges('i1','i5') = 1;
+  19  * Connections from node 2
+  20  edges('i2','i5') = 1;
+  21  * Connections from node 3
+  22  edges('i3','i6') = 1;
+  23  edges('i3','i4') = 1;
+  24  edges('i3','i5') = 1;
+  25  edges('i3','i7') = 1;
+  26  edges('i3','i8') = 1;
+  27  * Connections from node 4
+  28  edges('i4','i5') = 1;
+  29  edges('i4','i6') = 1;
+  30  edges('i4','i11') = 1;
+  31  * Connections from node 5
+  32  edges('i5','i10') = 1;
+  33  edges('i5','i11') = 1;
+  34  * Connections from node 6
+  35  edges('i6','i8') = 1;
+  36  edges('i6','i11') = 1;
+  37  * Connections from node 7
+  38  edges('i7','i8') = 1;
+  39  edges('i7','i12') = 1;
+  40  * Connections from node 8
+  41  edges('i8','i9') = 1;
+  42  edges('i8','i11') = 1;
+  43  edges('i8','i12') = 1;
+  44  * Connections from node 9
+  45  edges('i9','i10') = 1;
+  46  edges('i9','i11') = 1;
+  47  edges('i9','i12') = 1;
+  48  * Connections from node 10
+  49  edges('i10','i11') = 1;
+  50   
+  51  * Since it's an undirected graph there are bidirectional connections
+  52  loop((i,j),
+  53      if ((edges(i,j) = 1),
+  54          edges(j,i) = 1
+  55      );
+  56  );
+  57   
+  58  * We also need to consider that the zone that the antenna is being installed at,
+  59  * also has coverage
+  60  loop((i),
+  61      edges(i,i) = 1;
+  62  );
+  63   
+  64   
+  65  Variables
+  66      x(i) 'Node selected'
+  67      z 'Target function';
+  68   
+  69  Binary Variable
+  70      x;
+  71   
+  72  Equations
+  73      targetFunc 'Target Function'
+  74      coverage(i) 'All nodes must be covered';
+  75   
+  76  targetFunc .. z =e= sum(i, x(i));
+  77  coverage(i) .. sum((j), x(j)*edges(i,j)) =g=1;
+  78   
+  79   
+  80   
+  81  Model Exercise3 /all/ ;
+  82  option mip=cplex
+  83  Solve Exercise3 using mip minimizing z;
+  84  Display x.l;
+  85   
+  86   
+
+
+COMPILATION TIME     =        0.000 SECONDS      3 MB  40.1.0 93c2a77b WEX-WEI
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/14/22 09:19:34 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Equation Listing    SOLVE Exercise3 Using MIP From line 83
+
+
+---- targetFunc  =E=  Target Function
+
+targetFunc..  - x(i1) - x(i2) - x(i3) - x(i4) - x(i5) - x(i6) - x(i7) - x(i8) - x(i9) - x(i10) - x(i11) - x(i12) + z =E= 0 ; (LHS = 0)
+     
+
+---- coverage  =G=  All nodes must be covered
+
+coverage(i1)..  x(i1) + x(i2) + x(i3) + x(i5) =G= 1 ; (LHS = 0, INFES = 1 ****)
+     
+coverage(i2)..  x(i1) + x(i2) + x(i5) =G= 1 ; (LHS = 0, INFES = 1 ****)
+     
+coverage(i3)..  x(i1) + x(i3) + x(i4) + x(i5) + x(i6) + x(i7) + x(i8) =G= 1 ; (LHS = 0, INFES = 1 ****)
+     
+REMAINING 9 ENTRIES SKIPPED
+
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/14/22 09:19:34 Page 3
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Column Listing      SOLVE Exercise3 Using MIP From line 83
+
+
+---- x  Node selected
+
+x(i1)
+                (.LO, .L, .UP, .M = 0, 0, 1, 0)
+       -1       targetFunc
+        1       coverage(i1)
+        1       coverage(i2)
+        1       coverage(i3)
+        1       coverage(i5)
+
+x(i2)
+                (.LO, .L, .UP, .M = 0, 0, 1, 0)
+       -1       targetFunc
+        1       coverage(i1)
+        1       coverage(i2)
+        1       coverage(i5)
+
+x(i3)
+                (.LO, .L, .UP, .M = 0, 0, 1, 0)
+       -1       targetFunc
+        1       coverage(i1)
+        1       coverage(i3)
+        1       coverage(i4)
+        1       coverage(i5)
+        1       coverage(i6)
+        1       coverage(i7)
+        1       coverage(i8)
+
+REMAINING 9 ENTRIES SKIPPED
+
+---- z  Target function
+
+z
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+        1       targetFunc
+
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/14/22 09:19:34 Page 4
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Range Statistics    SOLVE Exercise3 Using MIP From line 83
+
+
+RANGE STATISTICS (ABSOLUTE NON-ZERO FINITE VALUES)
+
+RHS       [min, max] : [ 1.000E+00, 1.000E+00] - Zero values observed as well
+Bound     [min, max] : [ 1.000E+00, 1.000E+00] - Zero values observed as well
+Matrix    [min, max] : [ 1.000E+00, 1.000E+00]
+
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/14/22 09:19:34 Page 5
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE Exercise3 Using MIP From line 83
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           2     SINGLE EQUATIONS           13
+BLOCKS OF VARIABLES           2     SINGLE VARIABLES           13
+NON ZERO ELEMENTS            75     DISCRETE VARIABLES         12
+
+
+GENERATION TIME      =        0.016 SECONDS      4 MB  40.1.0 93c2a77b WEX-WEI
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/14/22 09:19:34 Page 6
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE Exercise3 Using MIP From line 83
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   Exercise3           OBJECTIVE  z
+     TYPE    MIP                 DIRECTION  MINIMIZE
+     SOLVER  CPLEX               FROM LINE  83
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE                2.0000
+
+ RESOURCE USAGE, LIMIT          0.016 10000000000.000
+ ITERATION COUNT, LIMIT         0    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 22.1.0.0 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- MIP status (101): integer optimal solution.
+--- Cplex Time: 0.00sec (det. 0.03 ticks)
+
+--- Fixing integer variables and solving final LP...
+
+
+--- Fixed MIP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.01 ticks)
+
+
+Proven optimal solution
+MIP Solution:            2.000000    (0 iterations, 0 nodes)
+Final Solve:             2.000000    (0 iterations)
+
+Best possible:           2.000000
+Absolute gap:            0.000000
+Relative gap:            0.000000
+
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- EQU targetFunc          .              .              .             1.0000      
+
+  targetFunc  Target Function
+
+---- EQU coverage  All nodes must be covered
+
+           LOWER          LEVEL          UPPER         MARGINAL
+
+i1          1.0000         1.0000        +INF             .          
+i2          1.0000         1.0000        +INF             .          
+i3          1.0000         2.0000        +INF             .          
+i4          1.0000         1.0000        +INF             .          
+i5          1.0000         1.0000        +INF             .          
+i6          1.0000         1.0000        +INF             .          
+i7          1.0000         1.0000        +INF             .          
+i8          1.0000         1.0000        +INF             .          
+i9          1.0000         1.0000        +INF             .          
+i10         1.0000         1.0000        +INF             .          
+i11         1.0000         2.0000        +INF             .          
+i12         1.0000         1.0000        +INF             .          
+
+---- VAR x  Node selected
+
+           LOWER          LEVEL          UPPER         MARGINAL
+
+i1           .              .             1.0000         1.0000      
+i2           .              .             1.0000         1.0000      
+i3           .              .             1.0000         1.0000      
+i4           .              .             1.0000         1.0000      
+i5           .             1.0000         1.0000         1.0000      
+i6           .              .             1.0000         1.0000      
+i7           .              .             1.0000         1.0000      
+i8           .             1.0000         1.0000         1.0000      
+i9           .              .             1.0000         1.0000      
+i10          .              .             1.0000         1.0000      
+i11          .              .             1.0000         1.0000      
+i12          .              .             1.0000         1.0000      
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- VAR z                 -INF            2.0000        +INF             .          
+
+  z  Target function
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/14/22 09:19:34 Page 7
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+E x e c u t i o n
+
+
+----     84 VARIABLE x.L  Node selected
+
+i5 1.000,    i8 1.000
+
+
+
+EXECUTION TIME       =        0.047 SECONDS      4 MB  40.1.0 93c2a77b WEX-WEI
+
+
+USER: GAMS Demo license for Juan Romero              G220823|0002CO-GEN
+      University of Los Andes, Colombia                        DL072145
+
+
+**** FILE SUMMARY
+
+Input      C:\Users\ElRey\Documents\Scripts\GAMS\laboratory-02\exercise3.gms
+Output     C:\Users\ElRey\Documents\Scripts\GAMS\laboratory-02\exercise3.lst
