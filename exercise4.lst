@@ -1,0 +1,333 @@
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/14/22 11:25:38 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+      Laboratorio 2 - MOS
+      Ejercicio 4
+       
+      Realizado por:
+      Juan Andrés Romero C - 202013449
+      Juan Sebastián Alegría - 202011282
+   9   
+  10  Sets i 'Graph Nodes' /i1*i7/
+  11       coords 'Coordinate Dimensions' /coordX, coordY/
+  12       alias(j,i);
+  13   
+  14  Table positions(i, coords)
+  15      coordX  coordY
+  16  i1  20      6
+  17  i2  22      1
+  18  i3  9       2
+  19  i4  3       25
+  20  i5  21      10
+  21  i6  29      2
+  22  i7  14      12;
+  23   
+  24  Parameter distance(i,j) 'Distances between nodes';
+  25   
+  26  Parameter graph(i,j) 'Resulting graph between the node set';
+  27   
+  28   
+  29  loop((i,j),
+  30      distance(i,j) = sqrt(sqr(positions(i, 'coordX') - positions(j, 'coordX')) + sqr(positions(i, 'coordY') - positions(j, 'coordY')));
+  31      if ((distance(i,j) <=20 and distance(i,j) >0),
+  32          graph(i,j) = distance(i,j);
+  33      else
+  34          graph(i,j) = 999;
+  35      );
+  36  );
+  37   
+  38   
+  39   
+  40  Variables
+  41    x(i,j)      Indicates if the link i-j is selected or not.
+  42    z           Objective function  ;
+  43   
+  44  Binary Variable x;
+  45   
+  46  Equations
+  47  targetFunc               target function
+  48  sourceNode(i)            source node
+  49  destinationNode(j)       destination node
+  50  intermediateNode         intermediate node;
+  51   
+  52  targetFunc                                         ..  z =e= sum((i,j), graph(i,j) * x(i,j));
+  53   
+  54  sourceNode(i)$(ord(i) = 4)                         ..  sum((j), x(i,j)) =e= 1;
+  55   
+  56  destinationNode(j)$(ord(j) = 6)                    ..  sum((i), x(i,j)) =e= 1;
+  57   
+  58  intermediateNode(i)$(ord(i) <> 4 and ord(i) ne 6)  ..  sum((j), x(i,j)) - sum((j), x(j,i)) =e= 0;
+  59   
+  60  Model Exercise4 /all/ ;
+  61  option mip=cplex
+  62  Solve Exercise4 using mip minimizing z;
+  63   
+  64  Display graph;
+  65  Display x.l;
+  66  Display z.l;
+
+
+COMPILATION TIME     =        0.000 SECONDS      3 MB  40.1.0 93c2a77b WEX-WEI
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/14/22 11:25:38 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Equation Listing    SOLVE Exercise4 Using MIP From line 62
+
+
+---- targetFunc  =E=  target function
+
+targetFunc..  - 999*x(i1,i1) - 5.3851648071345*x(i1,i2) - 11.7046999107196*x(i1,i3) - 999*x(i1,i4) - 4.12310562561766*x(i1,i5) - 9.8488578017961*x(i1,i6) - 8.48528137423857*x(i1,i7) - 5.3851648071345*x(i2,i1) - 999*x(i2,i2) - 13.0384048104053*x(i2,i3) - 999*x(i2,i4) - 9.05538513813742*x(i2,i5) - 7.07106781186548*x(i2,i6) - 13.6014705087354*x(i2,i7) - 11.7046999107196*x(i3,i1) - 13.0384048104053*x(i3,i2) - 999*x(i3,i3) - 999*x(i3,i4) - 14.422205101856*x(i3,i5) - 20*x(i3,i6) - 11.1803398874989*x(i3,i7) - 999*x(i4,i1) - 999*x(i4,i2) - 999*x(i4,i3) - 999*x(i4,i4) - 999*x(i4,i5) - 999*x(i4,i6) - 17.0293863659264*x(i4,i7) - 4.12310562561766*x(i5,i1) - 9.05538513813742*x(i5,i2) - 14.422205101856*x(i5,i3) - 999*x(i5,i4) - 999*x(i5,i5) - 11.3137084989848*x(i5,i6) - 7.28010988928052*x(i5,i7) - 9.8488578017961*x(i6,i1) - 7.07106781186548*x(i6,i2) - 20*x(i6,i3) - 999*x(i6,i4) - 11.3137084989848*x(i6,i5) - 999*x(i6,i6) - 18.0277563773199*x(i6,i7) - 8.48528137423857*x(i7,i1) - 13.6014705087354*x(i7,i2) - 11.1803398874989*x(i7,i3) - 17.0293863659264*x(i7,i4) - 7.28010988928052*x(i7,i5) - 18.0277563773199*x(i7,i6) - 999*x(i7,i7) + z =E= 0 ; (LHS = 0)
+     
+
+---- sourceNode  =E=  source node
+
+sourceNode(i4)..  x(i4,i1) + x(i4,i2) + x(i4,i3) + x(i4,i4) + x(i4,i5) + x(i4,i6) + x(i4,i7) =E= 1 ; (LHS = 0, INFES = 1 ****)
+     
+
+---- destinationNode  =E=  destination node
+
+destinationNode(i6)..  x(i1,i6) + x(i2,i6) + x(i3,i6) + x(i4,i6) + x(i5,i6) + x(i6,i6) + x(i7,i6) =E= 1 ; (LHS = 0, INFES = 1 ****)
+     
+
+---- intermediateNode  =E=  intermediate node
+
+intermediateNode(i1)..  x(i1,i2) + x(i1,i3) + x(i1,i4) + x(i1,i5) + x(i1,i6) + x(i1,i7) - x(i2,i1) - x(i3,i1) - x(i4,i1) - x(i5,i1) - x(i6,i1) - x(i7,i1) =E= 0 ; (LHS = 0)
+     
+intermediateNode(i2)..  - x(i1,i2) + x(i2,i1) + x(i2,i3) + x(i2,i4) + x(i2,i5) + x(i2,i6) + x(i2,i7) - x(i3,i2) - x(i4,i2) - x(i5,i2) - x(i6,i2) - x(i7,i2) =E= 0 ; (LHS = 0)
+     
+intermediateNode(i3)..  - x(i1,i3) - x(i2,i3) + x(i3,i1) + x(i3,i2) + x(i3,i4) + x(i3,i5) + x(i3,i6) + x(i3,i7) - x(i4,i3) - x(i5,i3) - x(i6,i3) - x(i7,i3) =E= 0 ; (LHS = 0)
+     
+REMAINING 2 ENTRIES SKIPPED
+
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/14/22 11:25:38 Page 3
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Column Listing      SOLVE Exercise4 Using MIP From line 62
+
+
+---- x  Indicates if the link i-j is selected or not.
+
+x(i1,i1)
+                (.LO, .L, .UP, .M = 0, 0, 1, 0)
+     -999       targetFunc
+
+x(i1,i2)
+                (.LO, .L, .UP, .M = 0, 0, 1, 0)
+       -5.3852  targetFunc
+        1       intermediateNode(i1)
+       -1       intermediateNode(i2)
+
+x(i1,i3)
+                (.LO, .L, .UP, .M = 0, 0, 1, 0)
+      -11.7047  targetFunc
+        1       intermediateNode(i1)
+       -1       intermediateNode(i3)
+
+REMAINING 46 ENTRIES SKIPPED
+
+---- z  Objective function
+
+z
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+        1       targetFunc
+
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/14/22 11:25:38 Page 4
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Range Statistics    SOLVE Exercise4 Using MIP From line 62
+
+
+RANGE STATISTICS (ABSOLUTE NON-ZERO FINITE VALUES)
+
+RHS       [min, max] : [ 1.000E+00, 1.000E+00] - Zero values observed as well
+Bound     [min, max] : [ 1.000E+00, 1.000E+00] - Zero values observed as well
+Matrix    [min, max] : [ 1.000E+00, 9.990E+02]
+
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/14/22 11:25:38 Page 5
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE Exercise4 Using MIP From line 62
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           4     SINGLE EQUATIONS            8
+BLOCKS OF VARIABLES           2     SINGLE VARIABLES           50
+NON ZERO ELEMENTS           124     DISCRETE VARIABLES         49
+
+
+GENERATION TIME      =        0.235 SECONDS      4 MB  40.1.0 93c2a77b WEX-WEI
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/14/22 11:25:38 Page 6
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE Exercise4 Using MIP From line 62
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   Exercise4           OBJECTIVE  z
+     TYPE    MIP                 DIRECTION  MINIMIZE
+     SOLVER  CPLEX               FROM LINE  62
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE               35.0571
+
+ RESOURCE USAGE, LIMIT          0.094 10000000000.000
+ ITERATION COUNT, LIMIT         5    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 22.1.0.0 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- MIP status (101): integer optimal solution.
+--- Cplex Time: 0.02sec (det. 0.33 ticks)
+
+--- Fixing integer variables and solving final LP...
+
+
+--- Fixed MIP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.02 ticks)
+
+
+Proven optimal solution
+MIP Solution:           35.057143    (5 iterations, 0 nodes)
+Final Solve:            35.057143    (0 iterations)
+
+Best possible:          35.057143
+Absolute gap:            0.000000
+Relative gap:            0.000000
+
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- EQU targetFunc          .              .              .             1.0000      
+
+  targetFunc  target function
+
+---- EQU sourceNode  source node
+
+          LOWER          LEVEL          UPPER         MARGINAL
+
+i4         1.0000         1.0000         1.0000          .          
+
+---- EQU destinationNode  destination node
+
+          LOWER          LEVEL          UPPER         MARGINAL
+
+i6         1.0000         1.0000         1.0000          .          
+
+---- EQU intermediateNode  intermediate node
+
+          LOWER          LEVEL          UPPER         MARGINAL
+
+i1          .              .              .              .          
+i2          .              .              .              .          
+i3          .              .              .              .          
+i5          .              .              .              .          
+i7          .              .              .              .          
+
+---- VAR x  Indicates if the link i-j is selected or not.
+
+             LOWER          LEVEL          UPPER         MARGINAL
+
+i1.i1          .              .             1.0000       999.0000      
+i1.i2          .              .             1.0000         5.3852      
+i1.i3          .              .             1.0000        11.7047      
+i1.i4          .              .             1.0000       999.0000      
+i1.i5          .              .             1.0000         4.1231      
+i1.i6          .              .             1.0000         9.8489      
+i1.i7          .              .             1.0000         8.4853      
+i2.i1          .              .             1.0000         5.3852      
+i2.i2          .              .             1.0000       999.0000      
+i2.i3          .              .             1.0000        13.0384      
+i2.i4          .              .             1.0000       999.0000      
+i2.i5          .              .             1.0000         9.0554      
+i2.i6          .              .             1.0000         7.0711      
+i2.i7          .              .             1.0000        13.6015      
+i3.i1          .              .             1.0000        11.7047      
+i3.i2          .              .             1.0000        13.0384      
+i3.i3          .              .             1.0000       999.0000      
+i3.i4          .              .             1.0000       999.0000      
+i3.i5          .              .             1.0000        14.4222      
+i3.i6          .              .             1.0000        20.0000      
+i3.i7          .              .             1.0000        11.1803      
+i4.i1          .              .             1.0000       999.0000      
+i4.i2          .              .             1.0000       999.0000      
+i4.i3          .              .             1.0000       999.0000      
+i4.i4          .              .             1.0000       999.0000      
+i4.i5          .              .             1.0000       999.0000      
+i4.i6          .              .             1.0000       999.0000      
+i4.i7          .             1.0000         1.0000        17.0294      
+i5.i1          .              .             1.0000         4.1231      
+i5.i2          .              .             1.0000         9.0554      
+i5.i3          .              .             1.0000        14.4222      
+i5.i4          .              .             1.0000       999.0000      
+i5.i5          .              .             1.0000       999.0000      
+i5.i6          .              .             1.0000        11.3137      
+i5.i7          .              .             1.0000         7.2801      
+i6.i1          .              .             1.0000         9.8489      
+i6.i2          .              .             1.0000         7.0711      
+i6.i3          .              .             1.0000        20.0000      
+i6.i4          .              .             1.0000       999.0000      
+i6.i5          .              .             1.0000        11.3137      
+i6.i6          .              .             1.0000       999.0000      
+i6.i7          .              .             1.0000        18.0278      
+i7.i1          .              .             1.0000         8.4853      
+i7.i2          .              .             1.0000        13.6015      
+i7.i3          .              .             1.0000        11.1803      
+i7.i4          .              .             1.0000        17.0294      
+i7.i5          .              .             1.0000         7.2801      
+i7.i6          .             1.0000         1.0000        18.0278      
+i7.i7          .              .             1.0000       999.0000      
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- VAR z                 -INF           35.0571        +INF             .          
+
+  z  Objective function
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 40.1.0  93c2a77b Aug 1, 2022           WEX-WEI x86 64bit/MS Windows - 09/14/22 11:25:38 Page 7
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+E x e c u t i o n
+
+
+----     64 PARAMETER graph  Resulting graph between the node set
+
+            i1          i2          i3          i4          i5          i6          i7
+
+i1     999.000       5.385      11.705     999.000       4.123       9.849       8.485
+i2       5.385     999.000      13.038     999.000       9.055       7.071      13.601
+i3      11.705      13.038     999.000     999.000      14.422      20.000      11.180
+i4     999.000     999.000     999.000     999.000     999.000     999.000      17.029
+i5       4.123       9.055      14.422     999.000     999.000      11.314       7.280
+i6       9.849       7.071      20.000     999.000      11.314     999.000      18.028
+i7       8.485      13.601      11.180      17.029       7.280      18.028     999.000
+
+
+----     65 VARIABLE x.L  Indicates if the link i-j is selected or not.
+
+            i6          i7
+
+i4                   1.000
+i7       1.000
+
+
+----     66 VARIABLE z.L                   =       35.057  Objective function
+
+
+EXECUTION TIME       =        0.766 SECONDS      4 MB  40.1.0 93c2a77b WEX-WEI
+
+
+USER: GAMS Demo license for Juan Romero              G220823|0002CO-GEN
+      University of Los Andes, Colombia                        DL072145
+
+
+**** FILE SUMMARY
+
+Input      C:\Users\ElRey\Documents\Scripts\GAMS\laboratory-02\exercise4.gms
+Output     C:\Users\ElRey\Documents\Scripts\GAMS\laboratory-02\exercise4.lst
